@@ -395,7 +395,7 @@ public class WxCartController {
         LitemallAddress checkedAddress = null;
         if (addressId == null || addressId.equals(0)) {
             checkedAddress = addressService.findDefault(userId);
-            // 如果仍然没有地址，则是没有收获地址
+            // 如果仍然没有地址，则是没有收货地址
             // 返回一个空的地址id=0，这样前端则会提醒添加地址
             if (checkedAddress == null) {
                 checkedAddress = new LitemallAddress();
@@ -495,7 +495,8 @@ public class WxCartController {
         BigDecimal integralPrice = new BigDecimal(0.00);
 
         // 订单费用
-        BigDecimal orderTotalPrice = checkedGoodsPrice.add(freightPrice).subtract(couponPrice);
+        BigDecimal orderTotalPrice = checkedGoodsPrice.add(freightPrice).subtract(couponPrice).max(new BigDecimal(0.00));
+
         BigDecimal actualPrice = orderTotalPrice.subtract(integralPrice);
 
         Map<String, Object> data = new HashMap<>();
